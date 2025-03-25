@@ -18,17 +18,12 @@ phases:
     commands:
       - echo "Building Docker images..."
       - docker-compose build
-      - echo "Tagging images..."
-      - docker tag frontend $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/frontend:latest
-      - docker tag backend $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/backend:latest
-      - docker tag database $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/database:latest
 
   post_build:
     commands:
       - echo "Pushing images to Docker Hub..."
       - docker push $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/frontend:latest
       - docker push $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/backend:latest
-      - docker push $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/database:latest
       - echo "Build and push completed successfully."
 
 artifacts:
