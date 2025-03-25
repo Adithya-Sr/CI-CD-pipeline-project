@@ -1,0 +1,64 @@
+version: "3.1"
+
+networks:
+  backend-network:
+    driver: bridge
+  db-network:
+    driver: bridge
+
+services:
+  database:
+    image: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand('ping').ok"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - db-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    container_name: backend
+    restart: unless-stopped
+    environment:
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthCheck"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    ports:
+      - "8080:8080"
+    networks:
+      - backend-network
+      - db-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    container_name: frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    networks:
+      - backend-network
+
+volumes:
+  mongo-data:

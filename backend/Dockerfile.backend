@@ -1,0 +1,21 @@
+ 
+FROM node:23 AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm install
+COPY src tsconfig.json ./
+RUN npm run build
+
+ 
+FROM node:23 AS deps
+WORKDIR /app
+COPY --from=build /app/package.json /app/package-lock.json ./
+RUN npm ci --omit=dev
+COPY --from=build /app/build ./build
+
+ 
+FROM node:23-slim
+WORKDIR /app
+COPY --from=deps /app /app
+RUN apt-get update && apt-get install -y curl
+CMD ["npm", "start"]

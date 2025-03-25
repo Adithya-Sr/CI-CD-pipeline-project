@@ -1,0 +1,45 @@
+/backend/.env
+/backend/node_modules
+/backend/build
+!/backend/.env.example
+ 
+todo.txt
+ 
+ 
+/frontend/node_modules
+/frontend/.pnp
+/frontend/.pnp.*
+/frontend/.yarn/*
+!/frontend/.yarn/patches
+!/frontend/.yarn/plugins
+!/frontend/.yarn/releases
+!/frontend/.yarn/versions
+
+ 
+/frontend/.next/
+/frontend/out/
+/frontend/build
+
+ 
+/frontend/coverage
+
+ 
+/frontend/.DS_Store  # macOS system file
+
+ 
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+/frontend/.pnpm-debug.log*
+
+ 
+/frontend/.env*
+/frontend/*.pem  # Private keys (be cautious!)
+
+ 
+/frontend/*.tsbuildinfo  # TypeScript incremental build info
+/frontend/next-env.d.ts  # Next.js environment types
+
+ 
+/frontend/.vercel
+

@@ -1,0 +1,25 @@
+FROM node:23 AS build
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm install --frozen-lockfile
+COPY . .
+RUN npm run build
+
+
+FROM node:23 AS deps
+WORKDIR /app
+COPY --from=build /app/package.json /app/package-lock.json ./
+RUN npm ci --omit=dev  # Install only production dependencies
+COPY --from=build /app/.next /app/.next
+COPY --from=build /app/public /app/public
+
+
+ 
+FROM node:23-slim
+WORKDIR /app
+COPY --from=deps /app /app
+ 
+CMD ["npm", "start"]
+
+
+

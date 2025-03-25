@@ -1,0 +1,36 @@
+version: 0.2
+
+env:
+  parameter-store:
+    DOCKER_REGISTRY_URL: "/appname/docker-registry/url"
+    DOCKER_REGISTRY_USERNAME: "/appname/docker-credentials/username"
+    DOCKER_REGISTRY_PASSWORD: "/appname/docker-credentials/password"
+    DATABASE_USERNAME: "/cicdProject/database/username"
+    DATABASE_PASSWORD: "/cicdProject/database/password"
+
+phases:
+  pre_build:
+    commands:
+      - echo "Logging in to Docker Hub..."
+      - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin
+
+  build:
+    commands:
+      - echo "Building Docker images..."
+      - docker-compose build
+      - echo "Tagging images..."
+      - docker tag frontend $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/frontend:latest
+      - docker tag backend $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/backend:latest
+      - docker tag database $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/database:latest
+
+  post_build:
+    commands:
+      - echo "Pushing images to Docker Hub..."
+      - docker push $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/frontend:latest
+      - docker push $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/backend:latest
+      - docker push $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/database:latest
+      - echo "Build and push completed successfully."
+
+artifacts:
+  files:
+    - "**/*"
