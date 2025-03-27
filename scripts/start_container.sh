@@ -9,7 +9,7 @@ echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" -
 
 echo "Starting containers..."
 docker-compose down
-docker compose pull
-docker compose up -d
+docker-compose pull
+docker-compose up -d
 
 
