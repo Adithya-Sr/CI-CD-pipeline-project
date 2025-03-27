@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 
 files:
-  - source: docker-compose.yml
+  - source: docker-compose-deploy.yml
     destination: /home/ubuntu
   - source: scripts/fetch_secrets.sh
     destination: /home/ubuntu
