@@ -8,7 +8,11 @@ networks:
 
 services:
   database:
-    image: mongo
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.database
+    container_name: database
+    image: ${DOCKER_REGISTRY_URL}/${DOCKER_REGISTRY_USERNAME}/database:latest
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USERNAME}
@@ -20,6 +24,8 @@ services:
       retries: 10
     volumes:
       - mongo-data:/data/db
+    ports:
+      - "27017:27017"
     networks:
       - db-network
 
