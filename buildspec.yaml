@@ -24,6 +24,7 @@ phases:
       - echo "Pushing images to Docker Hub..."
       - docker push $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/frontend:latest
       - docker push $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/backend:latest
+      - docker push $DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/database:latest
       - echo "Build and push completed successfully."
 
 artifacts:
